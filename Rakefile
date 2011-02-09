@@ -7,9 +7,11 @@ task :install do
   path = "/usr/local/bin" if path.empty?
 
   Dir.glob('bin/*').each do |file|
+    source = File.expand_path(file, File.dirname(__FILE__))
     dest = File.join(path, File.basename(file))
+
     puts "Copy #{file} -> #{dest}"
-    FileUtils.cp(File.expand_path(file, File.dirname(__FILE__)), dest)
+    FileUtils.cp source, dest
     FileUtils.chmod 0755, dest
   end
 end
