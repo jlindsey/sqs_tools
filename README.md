@@ -13,5 +13,5 @@ Requires
 Copyright
 ---------
 
-Copyright (c) 2010 Josh Lindsey at Cloudspace. See LICENSE for details.
+Copyright (c) 2011 Josh Lindsey at Cloudspace. See LICENSE for details.
 
