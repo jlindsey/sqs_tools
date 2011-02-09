@@ -10,6 +10,7 @@ task :install do
     dest = File.join(path, File.basename(file))
     puts "Copy #{file} -> #{dest}"
     FileUtils.cp(File.expand_path(file, File.dirname(__FILE__)), dest)
+    FileUtils.chmod 0755, dest
   end
 end
 
