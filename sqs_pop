@@ -1,0 +1,38 @@
+#!/usr/bin/env ruby
+
+begin
+  require 'rubygems'
+  require 'logger'
+  
+  gem 'right_aws', '~> 2.0.0'
+  require 'right_aws'
+rescue LoadError
+  $stderr.puts "Requires rubygems and right_aws ~> 2.0.0"
+  exit 1
+end
+
+if ARGV.empty?
+  puts <<-EOS
+Usage:
+  sqs_pop QUEUE
+EOS
+  exit
+end
+
+AwsAccessKeyId = ENV['AWS_ACCESS_KEY_ID']
+AwsSecretAccessKey = ENV['AWS_SECRET_ACCESS_KEY']
+
+if AwsAccessKeyId.nil? or AwsSecretAccessKey.nil?
+  $stderr.puts "Must set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables"
+  exit 1
+end
+
+QueueName = ARGV.shift
+
+logger = Logger.new $stderr
+logger.level = Logger::WARN
+sqs = RightAws::SqsGen2.new(AwsAccessKeyId, AwsSecretAccessKey, :logger => logger)
+q = sqs.queue QueueName
+
+puts q.pop
+
