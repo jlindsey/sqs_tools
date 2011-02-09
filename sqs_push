@@ -1,0 +1,46 @@
+#!/usr/bin/env ruby
+
+begin
+  require 'rubygems'
+  require 'logger'
+  
+  gem 'right_aws', '~> 2.0.0'
+  require 'right_aws'
+rescue LoadError
+  $stderr.puts "Requires rubygems and right_aws ~> 2.0.0"
+  exit 1
+end
+
+if ARGV.length < 2
+  puts <<-EOS
+Usage:
+  sqs_push QUEUE MESSAGE [MESSAGE ...]
+
+Examples:
+  # Ensure that your messages are quoted if they have any whitespace
+  sqs_push test_queue "this is a test message"
+
+  sqs_push best_queue_ever "another test message" "two messages at once!"
+EOS
+  exit
+end
+
+AwsAccessKeyId = ENV['AWS_ACCESS_KEY_ID']
+AwsSecretAccessKey = ENV['AWS_SECRET_ACCESS_KEY']
+
+if AwsAccessKeyId.nil? or AwsSecretAccessKey.nil?
+  $stderr.puts "Must set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables"
+  exit 1
+end
+
+QueueName = ARGV.shift
+
+logger = Logger.new $stderr
+logger.level = Logger::WARN
+sqs = RightAws::SqsGen2.new(AwsAccessKeyId, AwsSecretAccessKey, :logger => logger)
+q = sqs.queue QueueName
+
+ARGV.each do |message|
+  q.push message
+end
+
