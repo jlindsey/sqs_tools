@@ -10,6 +10,13 @@ Requires
 * Rubygems
 * right_aws ~> 2.0.0
 
+Installation
+----------------
+
+Requires you have rake installed.
+
+    # rake install
+
 Copyright
 ---------
 
